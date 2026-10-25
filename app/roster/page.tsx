@@ -145,7 +145,7 @@ export default function RosterPage() {
       </div>
 
       {loading ? (
-        <LogoLoader size={72} label="Loading roster…" />
+        <LogoLoader size={44} label="Loading roster…" />
       ) : (
         <>
           <div className="rounded-2xl border border-border bg-surface p-4">

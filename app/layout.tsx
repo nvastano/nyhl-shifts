@@ -17,12 +17,12 @@ const teko = Teko({
 });
 
 export const metadata: Metadata = {
-  title: "Sabres Shift Tracker",
-  description: "8U house league shift tracker for the Sabres.",
+  title: "NYHL Shift Tracker",
+  description: "Shift tracker for Nashville Youth Hockey League teams.",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Sabres Shifts",
+    title: "NYHL Shifts",
   },
   icons: {
     // metadata.icons paths aren't auto-prefixed with basePath, unlike
@@ -35,7 +35,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#070b16",
+  themeColor: "#0a0a0b",
 };
 
 export default function RootLayout({
@@ -51,16 +51,17 @@ export default function RootLayout({
           style={{ paddingTop: "max(12px, env(safe-area-inset-top, 0px))" }}
         >
           <div className="flex min-w-0 items-center gap-2.5">
-            <Link href="/" className="shrink-0">
+            <Link href="/" className="shrink-0 rounded-lg bg-white px-2 py-1.5">
               <Image
                 // Same basePath quirk as the apple-touch-icon above — next/image
                 // doesn't prefix a plain string src when images are unoptimized.
-                src="/nyhl-sabres/sabres-logo.png"
-                alt=""
-                width={38}
-                height={38}
+                // Logo is black-on-white, so it sits on its own white chip
+                // rather than directly on the dark header.
+                src="/nyhl-sabres/nyhl-logo.png"
+                alt="NYHL"
+                width={64}
+                height={28}
                 priority
-                className="rounded-full border border-accent/30"
               />
             </Link>
             <TeamSwitcher />

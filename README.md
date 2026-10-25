@@ -1,11 +1,12 @@
-# NYHL Sabres — Shift Tracker
+# NYHL — Shift Tracker
 
-An 8U house league coach's bench tool: check in who's at the game, drag to
-set the starting order, pick how many skaters go out at a time (3v3, 4v4,
-5v5…), and tap **Next Shift** to see who's on the ice and who's up next,
-with a fair round-robin rotation. Data is stored in a Google Sheet via a
-small Apps Script web app — no database to manage. The app is a static
-export, deployed to GitHub Pages, the same way as
+A Nashville Youth Hockey League coach's bench tool, shared across every team
+in the league: check in who's at the game, drag to set the starting order,
+pick how many skaters go out at a time (3v3, 4v4, 5v5…), and tap
+**Next Shift** to see who's on the ice and who's up next, with a fair
+round-robin rotation. Data is stored in a Google Sheet via a small Apps
+Script web app — no database to manage. The app is a static export, deployed
+to GitHub Pages, the same way as
 [exposure-tristar](https://github.com/nvastano/exposure-tristar).
 
 Live at: https://nvastano.github.io/nyhl-sabres/
@@ -29,9 +30,9 @@ Live at: https://nvastano.github.io/nyhl-sabres/
 For local development: copy `.env.local.example` to `.env.local`, set
 `NEXT_PUBLIC_SHEETS_WEBAPP_URL`, then `npm install && npm run dev`.
 
-The script auto-creates `Players`, `Games`, and `Shifts` tabs in the sheet on
-first use (or run `setupSheets` once from the Apps Script editor to create
-them up front).
+The script auto-creates `Players`, `Games`, `Shifts`, and `Teams` tabs in the
+sheet on first use (or run `setupSheets` once from the Apps Script editor to
+create them up front).
 
 ## Using it
 
@@ -66,7 +67,9 @@ Google Sheet or Apps Script deployment needed.
 
 ## Branding
 
-`app/icon.png`, `public/apple-touch-icon.png`, and `public/sabres-logo.png`
-are the NYHL Sabres crest, sized for their spots (512×512 for the first and
-last, 180×180 for the apple touch icon). Regenerate all three from a new
-source image if the logo ever changes again.
+`app/icon.png`, `public/apple-touch-icon.png`, and `public/nyhl-logo.png`
+are the Nashville Youth Hockey League logo, sized for their spots (512×512
+square for the first two, a 546×242 landscape crop for the header/loading
+logo). The logo is black-on-white, so it's shown on a small white card
+rather than directly on the app's dark background — regenerate all three
+from a new source image if the logo ever changes.

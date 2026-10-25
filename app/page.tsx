@@ -20,6 +20,7 @@ import {
   createRotation,
   nextShift as advanceShift,
   toggleSitting,
+  upNextPlayers,
 } from "@/lib/rotation";
 
 const MIN_SHIFT = 2;
@@ -237,6 +238,7 @@ export default function GameDayPage() {
   if (game) {
     const rotation = game.rotation;
     const bench = benchOrder(rotation);
+    const upNext = upNextPlayers(rotation);
     const sortedCounts = Object.keys(rotation.shiftCount).sort(
       (a, b) => (rotation.shiftCount[b] || 0) - (rotation.shiftCount[a] || 0)
     );
@@ -263,7 +265,7 @@ export default function GameDayPage() {
 
         <div
           className="rounded-[18px] border border-accent/30 p-4 shadow-lg"
-          style={{ background: "linear-gradient(165deg, rgba(79,217,196,0.14), var(--surface) 60%)" }}
+          style={{ background: "linear-gradient(165deg, rgba(246,144,30,0.14), var(--surface) 60%)" }}
         >
           <div className="mb-3 flex items-baseline justify-between">
             <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">On Ice Now</span>
@@ -279,6 +281,24 @@ export default function GameDayPage() {
                 className="flex items-center gap-1.5 rounded-xl border border-accent/40 bg-surface px-3 py-2 font-display text-lg font-semibold"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                {label(name)}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-dashed border-accent/35 bg-surface p-4">
+          <div className="mb-2.5 flex items-baseline justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">Up Next</span>
+            <span className="font-display text-sm tracking-wide text-muted">SHIFT {rotation.shiftNumber + 1}</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {upNext.length === 0 && <p className="text-sm text-muted">Nobody left on the bench.</p>}
+            {upNext.map((name) => (
+              <div
+                key={name}
+                className="flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-2 font-display text-lg font-semibold text-muted"
+              >
                 {label(name)}
               </div>
             ))}

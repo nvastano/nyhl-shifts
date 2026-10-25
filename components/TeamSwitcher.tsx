@@ -74,7 +74,7 @@ export default function TeamSwitcher() {
             <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
-        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">Shift Tracker</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">NYHL-Shifts</span>
       </button>
 
       {open && (

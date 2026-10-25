@@ -1,5 +1,5 @@
 /**
- * NYHL Shift Tracker — Google Sheets backend.
+ * NYHL-Shifts — Google Sheets backend.
  * Paste this into Extensions > Apps Script of your Google Sheet, then
  * Deploy > New deployment > Web app (Execute as: Me, Access: Anyone with the link).
  * Copy the deployment URL into NEXT_PUBLIC_SHEETS_WEBAPP_URL in the app's env.

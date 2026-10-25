@@ -17,17 +17,17 @@ const teko = Teko({
 });
 
 export const metadata: Metadata = {
-  title: "NYHL Shift Tracker",
+  title: "NYHL-Shifts",
   description: "Shift tracker for Nashville Youth Hockey League teams.",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "NYHL Shifts",
+    title: "NYHL-Shifts",
   },
   icons: {
     // metadata.icons paths aren't auto-prefixed with basePath, unlike
     // next/link and next/image — the project-site prefix is baked in here.
-    apple: "/nyhl-sabres/apple-touch-icon.png",
+    apple: "/nyhl-shifts/apple-touch-icon.png",
   },
 };
 
@@ -57,7 +57,7 @@ export default function RootLayout({
                 // doesn't prefix a plain string src when images are unoptimized.
                 // Logo is black-on-white, so it sits on its own white chip
                 // rather than directly on the dark header.
-                src="/nyhl-sabres/nyhl-logo.png"
+                src="/nyhl-shifts/nyhl-logo.png"
                 alt="NYHL"
                 width={64}
                 height={28}

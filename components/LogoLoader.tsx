@@ -36,7 +36,7 @@ export default function LogoLoader({ size = 64, label = "Loading..." }: { size?:
           className="flex items-center justify-center rounded-xl bg-white px-3 py-2 shadow-lg"
           style={{ animation: "nyhl-logo-breathe 2.4s ease-in-out infinite" }}
         >
-          <Image src="/nyhl-sabres/nyhl-logo.png" alt="NYHL" width={cardWidth} height={cardHeight} priority />
+          <Image src="/nyhl-shifts/nyhl-logo.png" alt="NYHL" width={cardWidth} height={cardHeight} priority />
         </div>
       </div>
       <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">{label}</span>

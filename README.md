@@ -1,4 +1,4 @@
-# NYHL — Shift Tracker
+# NYHL-Shifts
 
 A Nashville Youth Hockey League coach's bench tool, shared across every team
 in the league: check in who's at the game, drag to set the starting order,
@@ -9,7 +9,7 @@ Script web app — no database to manage. The app is a static export, deployed
 to GitHub Pages, the same way as
 [exposure-tristar](https://github.com/nvastano/exposure-tristar).
 
-Live at: https://nvastano.github.io/nyhl-sabres/
+Live at: https://nvastano.github.io/nyhl-shifts/
 
 ## Setup
 

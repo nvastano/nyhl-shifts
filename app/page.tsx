@@ -25,6 +25,9 @@ import {
 
 const MIN_SHIFT = 2;
 const MAX_SHIFT = 6;
+// NYHL rule: a player can't score more than 3 goals in a game — once they
+// hit the cap they have to pass the rest of the way.
+const GOAL_LIMIT = 3;
 
 function gameStorageKey(team: string) {
   return `active-game-v1:${team}`;
@@ -35,13 +38,19 @@ type SavedGame = {
   date: string;
   goalie: Player | null;
   rotation: RotationState;
+  goals: Record<string, number>;
 };
 
 function loadSavedGame(team: string): SavedGame | null {
   try {
     const raw = localStorage.getItem(gameStorageKey(team));
     if (!raw) return null;
-    return JSON.parse(raw) as SavedGame;
+    const parsed = JSON.parse(raw) as SavedGame;
+    // A game saved before goal tracking existed won't have this field yet —
+    // seed it from the roster already in the game instead of leaving it empty.
+    const goals =
+      parsed.goals || Object.fromEntries(Object.keys(parsed.rotation?.shiftCount || {}).map((n) => [n, 0]));
+    return { ...parsed, goals };
   } catch {
     return null;
   }
@@ -160,10 +169,21 @@ export default function GameDayPage() {
       date,
       goalie: goalieHere ? goalie : null,
       rotation,
+      goals: Object.fromEntries(names.map((n) => [n, 0])),
     };
     setGame(next);
     saveGame(team, next);
     if (gameId) logShift(gameId, rotation);
+  }
+
+  function adjustGoal(name: string, delta: number) {
+    if (!game) return;
+    const current = game.goals[name] || 0;
+    const next = Math.max(0, Math.min(GOAL_LIMIT, current + delta));
+    if (next === current) return;
+    const updated = { ...game, goals: { ...game.goals, [name]: next } };
+    setGame(updated);
+    saveGame(team, updated);
   }
 
   function logShift(gameId: string, rotation: RotationState) {
@@ -242,6 +262,7 @@ export default function GameDayPage() {
     const sortedCounts = Object.keys(rotation.shiftCount).sort(
       (a, b) => (rotation.shiftCount[b] || 0) - (rotation.shiftCount[a] || 0)
     );
+    const sortedGoals = Object.keys(game.goals).sort((a, b) => (game.goals[b] || 0) - (game.goals[a] || 0));
 
     return (
       <div className="flex flex-col gap-4 pb-32 pt-5">
@@ -267,23 +288,42 @@ export default function GameDayPage() {
           className="rounded-[18px] border border-accent/30 p-4 shadow-lg"
           style={{ background: "linear-gradient(165deg, rgba(246,144,30,0.14), var(--surface) 60%)" }}
         >
-          <div className="mb-3 flex items-baseline justify-between">
+          <div className="mb-1 flex items-baseline justify-between">
             <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">On Ice Now</span>
             <span className="font-display text-sm tracking-wide text-muted">SHIFT {rotation.shiftNumber}</span>
           </div>
+          {rotation.onIce.length > 0 && (
+            <p className="mb-2 text-[11px] text-muted">Tap a player to log a goal</p>
+          )}
           <div className="flex flex-wrap gap-2">
             {rotation.onIce.length === 0 && (
               <p className="text-sm text-muted">Everyone&rsquo;s sitting out — toggle someone back in below.</p>
             )}
-            {rotation.onIce.map((name) => (
-              <div
-                key={name}
-                className="flex items-center gap-1.5 rounded-xl border border-accent/40 bg-surface px-3 py-2 font-display text-lg font-semibold"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                {label(name)}
-              </div>
-            ))}
+            {rotation.onIce.map((name) => {
+              const goals = game.goals[name] || 0;
+              const maxedOut = goals >= GOAL_LIMIT;
+              return (
+                <button
+                  key={name}
+                  onClick={() => adjustGoal(name, 1)}
+                  className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 font-display text-lg font-semibold ${
+                    maxedOut ? "border-danger/60 bg-danger/10" : "border-accent/40 bg-surface"
+                  }`}
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${maxedOut ? "bg-danger" : "bg-accent"}`} />
+                  {label(name)}
+                  {goals > 0 && (
+                    <span
+                      className={`tnum rounded-full px-1.5 py-0.5 text-xs font-bold ${
+                        maxedOut ? "bg-danger text-white" : "bg-accent/20 text-accent"
+                      }`}
+                    >
+                      {goals}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -380,6 +420,48 @@ export default function GameDayPage() {
                 <span className="tnum font-display text-base text-accent">{rotation.shiftCount[name] || 0}</span>
               </div>
             ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-surface p-4">
+          <p className="mb-2.5 text-[11px] font-bold uppercase tracking-[0.14em] text-muted">Goals</p>
+          <div className="flex flex-col gap-2">
+            {sortedGoals.map((name) => {
+              const goals = game.goals[name] || 0;
+              const maxedOut = goals >= GOAL_LIMIT;
+              return (
+                <div
+                  key={name}
+                  className={`flex items-center justify-between gap-2 rounded-xl border px-3 py-2.5 ${
+                    maxedOut ? "border-danger/40 bg-danger/10" : "border-border bg-background"
+                  }`}
+                >
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-semibold">{label(name)}</div>
+                    {maxedOut && (
+                      <div className="text-[11px] font-bold text-danger">At the limit — pass only</div>
+                    )}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <button
+                      onClick={() => adjustGoal(name, -1)}
+                      disabled={goals === 0}
+                      className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-surface text-sm font-bold text-muted disabled:opacity-30"
+                    >
+                      −
+                    </button>
+                    <span className="tnum w-5 text-center font-display text-lg font-semibold">{goals}</span>
+                    <button
+                      onClick={() => adjustGoal(name, 1)}
+                      disabled={maxedOut}
+                      className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-surface text-sm font-bold text-accent disabled:opacity-30"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

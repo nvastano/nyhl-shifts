@@ -49,7 +49,13 @@ create them up front).
    tab in your Google Sheet as a record, best-effort (the tracker keeps
    working locally even if that sync is slow or fails, which matters on rink
    wifi).
-5. Tap **End Game** (twice, to confirm) when the game's over.
+5. Tap a player's "On Ice Now" chip each time they score to log a goal. NYHL
+   caps a player at 3 goals a game (pass only after that) — once they hit 3,
+   their chip and their row in the **Goals** list turn red with "At the
+   limit — pass only," and you can't add a 4th. Use the +/− in the Goals
+   list to fix a mis-tap. Goals reset with each new game and aren't sent to
+   the Sheet — they're just for enforcing the in-game limit.
+6. Tap **End Game** (twice, to confirm) when the game's over.
 
 ## Coaching more than one team
 
